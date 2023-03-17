@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_do_it/controller/date/date_bloc.dart';
+import 'package:just_do_it/controller/priority/priority_bloc.dart';
 import 'package:just_do_it/function/db_function.dart';
 import 'package:just_do_it/model/data_model.dart';
 import 'package:just_do_it/utilities/Colors.dart';
@@ -16,6 +17,8 @@ import 'package:intl/intl.dart';
 String? myTaskId;
 
 dynamic newDateTime;
+
+bool newPriority = false;
 
 // dynamic newTime;
 // dynamic dTime;
@@ -57,14 +60,12 @@ class addTask extends StatelessWidget {
       title: _title,
       content: _content,
       date: _dateTime == null ? DateTime.now() : newDateTime,
-      priority: myPriority,
+      priority: newPriority,
       id: _id,
       isCompleted: false,
     );
     addTasks(_tasks);
   }
-
-  
 
   final DateBloc _dateBloc = DateBloc();
 
@@ -134,8 +135,8 @@ class addTask extends StatelessWidget {
               final time = await pickTime(context);
               if (time == null) return;
 
-              newDateTime = DateTime(dateTime!.year, dateTime!.month, dateTime!.day,
-                  time.hour, time.minute);
+              newDateTime = DateTime(dateTime!.year, dateTime!.month,
+                  dateTime!.day, time.hour, time.minute);
 
               BlocProvider.of<DateBloc>(context).add(SelectDate());
               // print(newDateTime);
@@ -158,9 +159,11 @@ class addTask extends StatelessWidget {
         initialTime: TimeOfDay.now(),
       );
 
-  bool myPriority = false;
+  // bool myPriority = false;
 
-  onChangeFunction(bool newValue) {
+  onChangeFunction(bool newValue, context) {
+    newPriority = !newPriority;
+    BlocProvider.of<PriorityBloc>(context).add(AddPriority());
     // setState(() {
     //   myPriority = newValue;
     // });
@@ -214,25 +217,26 @@ class addTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final DateTime dateTime = DateBloc().state.nDate;
-    // print(dateTime);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      return BlocProvider.of<PriorityBloc>(context).add(InitialPriority());
+    });
     return Scaffold(
-        backgroundColor: Black(),
-        appBar: MyAppBar(context),
-        body: ListView(
-          children: [
-            const szdbx(ht: 100),
-            MyTextFieldForm(myController: _titleController, hintName: 'Tittle'),
-            MyTextFieldForm(
-                myController: _contentController, hintName: 'Content'),
-            DateAndTime(
-              context,
-            ),
-            const szdbx(ht: 10),
-            PriorityBtn(
-                isSwitched: myPriority, onChangeMethod: onChangeFunction),
-            // priority(myPriority, onChangeFunction),
-          ],
-        ));
+      backgroundColor: Black(),
+      appBar: MyAppBar(context),
+      body: ListView(
+        children: [
+          const szdbx(ht: 100),
+          MyTextFieldForm(myController: _titleController, hintName: 'Tittle'),
+          MyTextFieldForm(
+              myController: _contentController, hintName: 'Content'),
+          DateAndTime(context),
+          const szdbx(ht: 10),
+           PriorityBtn(
+                  isSwitched: newPriority, onChangeMethod: onChangeFunction)
+          
+          // priority(myPriority, onChangeFunction),
+        ],
+      ),
+    );
   }
 }

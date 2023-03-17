@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:just_do_it/function/db_function.dart';
 // import 'package:flutter/scheduler.dart';
@@ -14,7 +15,7 @@ import 'package:just_do_it/utilities/textField.dart';
 import 'package:just_do_it/widgets/sizedbox.dart';
 import 'package:intl/intl.dart';
 
-class taskView extends StatefulWidget {
+class taskView extends StatelessWidget {
   taskView(
       {Key? key,
       required this.passId,
@@ -30,25 +31,20 @@ class taskView extends StatefulWidget {
   final taskEventKey;
   final priority;
 
-  @override
-  State<taskView> createState() => _taskViewState();
-}
-
-class _taskViewState extends State<taskView> {
   DateTime dateTime = DateTime.now();
 
   final _titleController = TextEditingController();
 
   final _contentController = TextEditingController();
 
-  AppBar MyAppBar() {
+  AppBar MyAppBar(context) {
     return AppBar(
-      actions: [appbarAction()],
+      actions: [appbarAction(context)],
       backgroundColor: Black(),
     );
   }
 
-  Widget appbarAction() {
+  Widget appbarAction(context) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: Row(children: [
@@ -69,10 +65,10 @@ class _taskViewState extends State<taskView> {
         IconButton(
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: ((context) => editTask(
-                      passId: widget.passId,
-                      passValue: widget.passValue,
+                      passId: passId,
+                      passValue: passValue,
                     )))),
-            icon: Icon(
+            icon:const Icon(
               Icons.edit_outlined,
               size: 30,
             )),
@@ -88,8 +84,8 @@ class _taskViewState extends State<taskView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          priorityDisplay(widget.priority),
-          MyDate(passDate: widget.passDate),
+          priorityDisplay(priority),
+          MyDate(passDate: passDate),
         ],
       ),
     );
@@ -99,14 +95,14 @@ class _taskViewState extends State<taskView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Black(),
-        appBar: MyAppBar(),
+        appBar: MyAppBar(context),
         body: ListView(
           children: [
             const szdbx(ht: 80),
             PriorityAndDate(),
             const szdbx(ht: 10),
-            MyTextField(hintName: widget.passValue.title, ht: 72),
-            MyTextField(hintName: widget.passValue.content, ht: 400),
+            MyTextField(hintName: passValue.title, ht: 72),
+            MyTextField(hintName: passValue.content, ht: 400),
             const szdbx(ht: 80),
           ],
         ));

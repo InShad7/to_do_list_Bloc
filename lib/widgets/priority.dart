@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_do_it/utilities/colors.dart';
 
-class PriorityBtn extends StatefulWidget {
+import '../controller/priority/priority_bloc.dart';
+
+class PriorityBtn extends StatelessWidget {
   const PriorityBtn({
     Key? key,
     required this.isSwitched,
@@ -12,12 +15,10 @@ class PriorityBtn extends StatefulWidget {
   final Function onChangeMethod;
 
   @override
-  State<PriorityBtn> createState() => _PriorityBtnState();
-}
-
-class _PriorityBtnState extends State<PriorityBtn> {
-  @override
   Widget build(BuildContext context) {
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   return BlocProvider.of<PriorityBloc>(context).add(InitialPriority());
+    // });
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -31,14 +32,18 @@ class _PriorityBtnState extends State<PriorityBtn> {
               'Low',
               style: TextStyle(color: Grey()),
             ),
-            Switch(
-              value: widget.isSwitched,
-              onChanged: (newValue) {
-                widget.onChangeMethod(newValue);
+            BlocBuilder<PriorityBloc, PriorityState>(
+              builder: (context, state) {
+                return Switch(
+                  value: state.priority,
+                  onChanged: (newValue) {
+                    onChangeMethod(newValue,context);
+                  },
+                  activeColor: SwitchActiveColor(),
+                  inactiveThumbColor: SwitchInActiveColor(),
+                  inactiveTrackColor: SwitchInActiveColor(),
+                );
               },
-              activeColor: SwitchActiveColor(),
-              inactiveThumbColor: SwitchInActiveColor(),
-              inactiveTrackColor: SwitchInActiveColor(),
             ),
             const Text(
               'High',
