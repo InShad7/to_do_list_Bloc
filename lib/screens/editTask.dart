@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_do_it/controller/date/date_bloc.dart';
+import 'package:just_do_it/controller/priority/priority_bloc.dart';
 import 'package:just_do_it/function/db_function.dart';
 import 'package:just_do_it/model/data_model.dart';
 import 'package:just_do_it/screens/HomeScreen.dart';
+import 'package:just_do_it/screens/addTask.dart';
 import 'package:just_do_it/utilities/Colors.dart';
 import 'package:just_do_it/utilities/textfieldForm.dart';
+import 'package:just_do_it/widgets/editDate.dart';
+import 'package:just_do_it/widgets/editTime.dart';
 import 'package:just_do_it/widgets/priority.dart';
 
 import 'package:just_do_it/widgets/sizedbox.dart';
 
-class editTask extends StatefulWidget {
+bool? editPriority;
+
+class editTask extends StatelessWidget {
   editTask({
     Key? key,
     required this.passId,
@@ -19,30 +26,15 @@ class editTask extends StatefulWidget {
   late Task passValue;
   final int passId;
 
-  @override
-  State<editTask> createState() => _editTaskState();
-}
-
-class _editTaskState extends State<editTask> {
-  @override
-  void initState() {
-    super.initState();
-    myPriority = widget.passValue.priority;
-    dateTime = widget.passValue.date;
-  }
-
-  DateTime dateTime = DateTime.now();
-
-  late final _titleController =
-      TextEditingController(text: widget.passValue.title);
+  late final _titleController = TextEditingController(text: passValue.title);
 
   late final _contentController =
-      TextEditingController(text: widget.passValue.content);
+      TextEditingController(text: passValue.content);
 
-  Future<void> TaskAddBtn(int index) async {
+  Future<void> TaskAddBtnEdit(int index, context) async {
     final _title = _titleController.text.trim();
     final _content = _contentController.text.trim();
-    final _dateTime = dateTime;
+    final _dateTime = newDateTime;
     final _isComplete = false;
     final _id = DateTime.now().toString();
 
@@ -54,86 +46,18 @@ class _editTaskState extends State<editTask> {
     final _tasks = Task(
       title: _title,
       content: _content,
-      date: _dateTime,
-      priority: myPriority,
+      date: _dateTime == null ? DateTime.now() : newDateTime,
+      priority: newPriority,
       // isCompleted: _isComplete,
       id: _id,
-      isCompleted: false, 
+      isCompleted: false,
       // time: dateTime,
     );
-    // addTasks(_tasks);
 
-    // final taskDB = await Hive.openBox<Task>('Task_db');
-    // taskDB.putAt(index, _tasks);
-    // getTask();
-    editTasks(widget.passValue.id, context, _tasks);
+    editTasks(passValue.id, context, _tasks);
   }
 
-  Widget date() {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: ThemeGrey(),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              padding: EdgeInsets.all(25)),
-          onPressed: () async {
-            final date = await pickDate();
-            if (date == null) return;
 
-            final newDateTime = DateTime(date.year, date.month, date.day,
-                dateTime.hour, dateTime.minute);
-            setState(() {
-              dateTime = newDateTime;
-            });
-          },
-          child: Text(
-            '${dateTime.day}/${dateTime.month}/${dateTime.year}',
-            style: TextStyle(color: Grey()),
-          )),
-    );
-  }
-
-  Future<DateTime?> pickDate() => showDatePicker(
-      context: context,
-      initialDate: dateTime,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2500));
-
-  Widget time() {
-    final hours = dateTime.hour.toString().padLeft(2, '0');
-    final minutes = dateTime.minute.toString().padLeft(2, '0');
-
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            backgroundColor: ThemeGrey(),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            padding: EdgeInsets.all(25)),
-        onPressed: () async {
-          final time = await pickTime();
-          if (time == null) return;
-
-          final newDateTime = DateTime(dateTime.year, dateTime.month,
-              dateTime.day, time.hour, time.minute);
-          setState(() {
-            dateTime = newDateTime;
-          });
-        },
-        child: Text(
-          '$hours:$minutes',
-          style: TextStyle(color: Grey()),
-        ),
-      ),
-    );
-  }
-
-  Future<TimeOfDay?> pickTime() => showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: dateTime.hour, minute: dateTime.minute));
 
   AppBar MyAppBar(BuildContext context) {
     return AppBar(
@@ -151,7 +75,7 @@ class _editTaskState extends State<editTask> {
       children: [
         IconButton(
             onPressed: () {
-              TaskAddBtn(widget.passId);
+              TaskAddBtnEdit(passId, context);
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: ((context) => HomeScreen())),
                   (route) => false);
@@ -170,16 +94,25 @@ class _editTaskState extends State<editTask> {
     );
   }
 
-  var myPriority = false;
+  // var myPriority = false;
 
-  onChangeFunction(bool newValue) {
-    setState(() {
-      myPriority = newValue;
-    });
+  onChangeFunction(bool newValue, context) {
+    newPriority = !newPriority;
+    BlocProvider.of<PriorityBloc>(context).add(AddPriority());
+    // setState(() {
+    //   myPriority = newValue;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<PriorityBloc>(context).add(EditPriority());
+      BlocProvider.of<DateBloc>(context).add(EditDateTime());
+    });
+    dateTime = passValue.date;
+    editPriority = passValue.priority;
+
     return Scaffold(
         backgroundColor: Black(),
         appBar: MyAppBar(context),
@@ -192,12 +125,14 @@ class _editTaskState extends State<editTask> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                date(),
-                time(),
+                EditDate(passValue: passValue),
+                EditTime(passValue: passValue),
+                // date(context),
+                // time(context),
               ],
             ),
             PriorityBtn(
-                isSwitched: myPriority, onChangeMethod: onChangeFunction),
+                isSwitched: newPriority, onChangeMethod: onChangeFunction),
           ],
         ));
   }

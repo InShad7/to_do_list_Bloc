@@ -10,3 +10,6 @@ class SelectDate extends DateEvent {
 
  // SelectDate({required this.date});
 }
+
+class EditDateTime extends DateEvent {
+}

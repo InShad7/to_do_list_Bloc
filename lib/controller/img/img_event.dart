@@ -9,3 +9,5 @@ class AddImage extends ImgEvent {
 }
 
 class InitialImg extends ImgEvent{}
+
+class EditImg extends ImgEvent{}

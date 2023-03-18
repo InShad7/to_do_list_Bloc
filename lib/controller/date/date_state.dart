@@ -6,5 +6,9 @@ class DateState {
 }
 
 class DateInitial extends DateState {
-  DateInitial():super(nDate: DateTime.now());
+  DateInitial() : super(nDate: DateTime.now());
 }
+
+// class EditDate extends DateState {
+//   EditDate() : super(nDate: dateTime);
+// }

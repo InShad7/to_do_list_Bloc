@@ -5,3 +5,5 @@ class PriorityEvent {}
 class AddPriority extends PriorityEvent {}
 
 class InitialPriority extends PriorityEvent {}
+
+class EditPriority extends PriorityEvent{}

@@ -19,7 +19,7 @@ import 'package:intl/intl.dart';
 
 // bool myhigh = false;
 
-class eventView extends StatefulWidget {
+class eventView extends StatelessWidget {
   eventView(
       {Key? key,
       required this.passId,
@@ -35,11 +35,6 @@ class eventView extends StatefulWidget {
   final taskEventKey;
   final priority;
 
-  @override
-  State<eventView> createState() => _eventViewState();
-}
-
-class _eventViewState extends State<eventView> {
   DateTime dateTime = DateTime.now();
 
   final _titleController = TextEditingController();
@@ -59,7 +54,7 @@ class _eventViewState extends State<eventView> {
             borderRadius: BorderRadius.circular(20),
             // color: Color.fromARGB(156, 212, 195, 195),
             image: DecorationImage(
-              image: FileImage(File(widget.passValue.image)),
+              image: FileImage(File(passValue.image)),
               fit: BoxFit.fitWidth,
             ),
           ),
@@ -70,14 +65,14 @@ class _eventViewState extends State<eventView> {
 
  
 
-  AppBar MyAppBar() {
+  AppBar MyAppBar(context) {
     return AppBar(
-      actions: [appbarAction()],
+      actions: [appbarAction(context)],
       backgroundColor: Black(),
     );
   }
 
-  Widget appbarAction() {
+  Widget appbarAction(context) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),
       child: Row(
@@ -85,8 +80,8 @@ class _eventViewState extends State<eventView> {
           IconButton(
               onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: ((context) => editEvent(
-                        passId: widget.passId,
-                        passValue: widget.passValue,
+                        passId:  passId,
+                        passValue:  passValue,
                       )))),
               icon: Icon(
                 Icons.edit_outlined,
@@ -103,8 +98,8 @@ class _eventViewState extends State<eventView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          priorityDisplay(widget.priority),
-          MyDate(passDate: widget.passDate),
+          priorityDisplay( priority),
+          MyDate(passDate:  passDate),
         ],
       ),
     );
@@ -114,7 +109,7 @@ class _eventViewState extends State<eventView> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Black(),
-        appBar: MyAppBar(),
+        appBar: MyAppBar(context),
         body: Column(
           children: [
             Expanded(
@@ -124,8 +119,8 @@ class _eventViewState extends State<eventView> {
                   PriorityAndDate(),
                   const szdbx(ht: 10),
                   img(),
-                  MyTextField(hintName: widget.passValue.title, ht: 72),
-                  MyTextField(hintName: widget.passValue.content, ht: 300),
+                  MyTextField(hintName:  passValue.title, ht: 72),
+                  MyTextField(hintName:  passValue.content, ht: 300),
                 ],
               ),
             ),
