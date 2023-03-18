@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:just_do_it/model/data_model.dart';
 import 'package:just_do_it/screens/dashBoardEvent.dart';
-// import 'package:just_do_it/screens/search.dart';
-
 import 'package:just_do_it/utilities/colors.dart';
 import 'package:just_do_it/widgets/completedTask.dart';
-// import 'package:just_do_it/widgets/eventList.dart';
-// import 'package:just_do_it/widgets/pendingEvents.dart';
 import 'package:just_do_it/widgets/pendingTasks.dart';
 import 'package:just_do_it/widgets/sizedbox.dart';
-// import 'package:just_do_it/widgets/taskList.dart';
 
-class dashBoard extends StatefulWidget {
-  dashBoard({Key? key}) : super(key: key);
 
-  @override
-  State<dashBoard> createState() => _dashBoardState();
-}
+class DashBoard extends StatelessWidget {
+  DashBoard({Key? key}) : super(key: key);
 
-class _dashBoardState extends State<dashBoard> {
+
   final List<Tab> myTabs = <Tab>[
     const Tab(text: 'Pending'),
     const Tab(text: 'Completed'),
   ];
 
-  TabBarView TabBarList() {
+  TabBarView tabBarList() {
     return TabBarView(children: [
       Column(
         children: [
@@ -76,6 +67,6 @@ class _dashBoardState extends State<dashBoard> {
         child: Scaffold(
             backgroundColor: Black(),
             appBar: myAppBar(context),
-            body: Column(children: [Expanded(child: TabBarList())])));
+            body: Column(children: [Expanded(child: tabBarList())])));
   }
 }

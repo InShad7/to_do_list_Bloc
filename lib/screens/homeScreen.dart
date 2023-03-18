@@ -5,7 +5,7 @@ import 'package:just_do_it/function/DB_Event_Function.dart';
 import 'package:just_do_it/function/db_function.dart';
 import 'package:just_do_it/screens/addEvent.dart';
 import 'package:just_do_it/screens/addTask.dart';
-import 'package:just_do_it/screens/dashboard.dart';
+import 'package:just_do_it/screens/dashBoard.dart';
 import 'package:just_do_it/screens/navigationDrawer.dart';
 import 'package:just_do_it/screens/search.dart';
 import 'package:just_do_it/utilities/yourTasksField.dart';
@@ -113,7 +113,7 @@ class HomeScreen extends StatelessWidget {
         IconButton(
             alignment: Alignment.topCenter,
             onPressed: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => dashBoard())),
+                .push(MaterialPageRoute(builder: (context) => DashBoard())),
             icon: const Icon(
               Icons.person_rounded,
               size: 34,
