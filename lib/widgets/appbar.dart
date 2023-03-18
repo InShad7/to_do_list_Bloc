@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:just_do_it/function/db_event_function.dart';
 import 'package:just_do_it/function/db_function.dart';
 import 'package:just_do_it/model/data_model.dart';
 import 'package:just_do_it/screens/addEvent.dart';

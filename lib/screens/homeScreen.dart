@@ -108,7 +108,7 @@ class HomeScreen extends StatelessWidget {
             size: 34,
           ),
           onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: ((context) => search()))),
+              .push(MaterialPageRoute(builder: ((context) => Search()))),
         ),
         IconButton(
             alignment: Alignment.topCenter,
@@ -160,7 +160,7 @@ class HomeScreen extends StatelessWidget {
         length: myTabs.length,
         child: Scaffold(
             key: _scaffoldKey,
-            drawer: NavigationDrawer(),
+            drawer:const NavigationDrawer(),
             backgroundColor: Black(),
             appBar: MyAppBar(context),
             body: Stack(children: [TabBarList(context), FloatBtnPosition(context)])));

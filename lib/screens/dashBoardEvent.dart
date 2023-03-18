@@ -11,20 +11,15 @@ import 'package:just_do_it/widgets/pendingTasks.dart';
 import 'package:just_do_it/widgets/sizedbox.dart';
 import 'package:just_do_it/widgets/taskList.dart';
 
-class DashBoardEvent extends StatefulWidget {
+class DashBoardEvent extends StatelessWidget {
   DashBoardEvent({Key? key}) : super(key: key);
 
-  @override
-  State<DashBoardEvent> createState() => _DashBoardEventState();
-}
-
-class _DashBoardEventState extends State<DashBoardEvent> {
   final List<Tab> myTabs = <Tab>[
     const Tab(text: 'Pending'),
     const Tab(text: 'Completed'),
   ];
 
-  TabBarView TabBarList() {
+  TabBarView tabBarList() {
     return TabBarView(children: [
       Column(
         children: [
@@ -80,6 +75,6 @@ class _DashBoardEventState extends State<DashBoardEvent> {
         child: Scaffold(
             backgroundColor: Black(),
             appBar: myAppBar(context),
-            body: Column(children: [Expanded(child: TabBarList())])));
+            body: Column(children: [Expanded(child: tabBarList())])));
   }
 }

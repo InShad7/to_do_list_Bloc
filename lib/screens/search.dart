@@ -5,30 +5,25 @@ import 'package:hive/hive.dart';
 import 'package:just_do_it/function/db_event_function.dart';
 import 'package:just_do_it/model/data_model.dart';
 import 'package:just_do_it/screens/EventView.dart';
-import 'package:just_do_it/screens/addEvent.dart';
-import 'package:just_do_it/screens/addTask.dart';
 import 'package:just_do_it/screens/taskView.dart';
 import 'package:just_do_it/utilities/Colors.dart';
 import 'package:intl/intl.dart';
 import 'package:just_do_it/utilities/globalFunctions.dart';
-import 'package:just_do_it/widgets/pendingEvents.dart';
-import 'package:just_do_it/widgets/pendingTasks.dart';
 
 import '../function/db_function.dart';
 import '../widgets/sizedbox.dart';
-import '../widgets/taskList.dart';
 
-class search extends StatefulWidget {
-  search({
+class Search extends StatefulWidget {
+  const Search({
     Key? key,
     // required this.passValue,
   }) : super(key: key);
   // Task passValue;
   @override
-  State<search> createState() => _searchState();
+  State<Search> createState() => _SearchState();
 }
 
-class _searchState extends State<search> {
+class _SearchState extends State<Search> {
   DateTimeRange? newDateTime;
 
   late DateTime dateTime = DateTime.now();
@@ -196,7 +191,6 @@ class _searchState extends State<search> {
             });
           },
         ),
-
         FilterChip(
           label: Text('Date '),
           backgroundColor: Color.fromARGB(255, 113, 157, 208),
@@ -516,13 +510,17 @@ class _searchState extends State<search> {
     getTask();
     getEvent();
     return DefaultTabController(
-        length: myTabs.length,
-        child: Scaffold(
-            appBar: MyAppBar(),
-            backgroundColor: Black(),
-            body: Stack(children: [
-              TabBarList(),
-              techChips(),
-            ])));
+      length: myTabs.length,
+      child: Scaffold(
+        appBar: MyAppBar(),
+        backgroundColor: Black(),
+        body: Stack(
+          children: [
+            TabBarList(),
+            techChips(),
+          ],
+        ),
+      ),
+    );
   }
 }

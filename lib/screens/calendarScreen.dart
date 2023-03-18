@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:just_do_it/controller/calendar/calendar_bloc.dart';
 import 'package:just_do_it/function/db_event_function.dart';
 import 'package:just_do_it/function/db_function.dart';
 import 'package:just_do_it/model/data_model.dart';
@@ -9,18 +11,20 @@ import 'package:just_do_it/screens/EventView.dart';
 import 'package:just_do_it/screens/taskView.dart';
 import 'package:just_do_it/utilities/Colors.dart';
 import 'package:just_do_it/utilities/globalFunctions.dart';
-import 'package:just_do_it/widgets/TaskList.dart';
 import 'package:just_do_it/widgets/sizedbox.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({super.key});
+DateTime focusedDay = DateTime.now();
+DateTime selectedDay = DateTime.now();
 
-  @override
-  State<CalendarScreen> createState() => CalendarScreenState();
-}
+class CalendarScreen extends StatelessWidget {
+  CalendarScreen({super.key});
 
-class CalendarScreenState extends State<CalendarScreen> {
+//   @override
+//   State<CalendarScreen> createState() => CalendarScreenState();
+// }
+
+// class CalendarScreenState extends State<CalendarScreen> {
   List<Task> taskList = Hive.box<Task>('task_db').values.toList();
 
   late List<Task> taskDisplay = List<Task>.from(taskList);
@@ -31,72 +35,76 @@ class CalendarScreenState extends State<CalendarScreen> {
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime today = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
 
   var taskEventKey = 0;
-  @override
-  void initState() {
-    super.initState();
-    _selectedDay = _focusedDay;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   selectedDay = focusedDay;
+  // }
 
-  Container Calendar() {
-    return Container(
-      width: 500,
-      height: 400,
-      color: Black(),
-      child: TableCalendar(
-        // eventLoader: (
-        //   day,
-        // ) =>
-        //     getTodos(day),
-        focusedDay: today,
-        firstDay: DateTime.utc(2010, 10, 20),
-        lastDay: DateTime.utc(2040, 10, 20),
-        calendarFormat: _calendarFormat,
-        headerStyle: HeaderStyle(
-          titleCentered: true,
-          formatButtonShowsNext: true,
-          formatButtonTextStyle: TextStyle(color: Grey()),
-          titleTextStyle: TextStyle(color: Grey(), fontSize: 20),
-        ),
-        availableGestures: AvailableGestures.all,
-        calendarStyle: CalendarStyle(
-            selectedDecoration: BoxDecoration(
-              color: OrangeColor(),
-              shape: BoxShape.circle,
+  Widget Calendar() {
+    return BlocBuilder<CalendarBloc, CalendarState>(
+      builder: (context, state) {
+        return Container(
+          width: 500,
+          height: 400,
+          color: Black(),
+          child: TableCalendar(
+            // eventLoader: (
+            //   day,
+            // ) =>
+            //     getTodos(day),
+            focusedDay: today,
+            firstDay: DateTime.utc(2010, 10, 20),
+            lastDay: DateTime.utc(2040, 10, 20),
+            calendarFormat: _calendarFormat,
+            headerStyle: HeaderStyle(
+              titleCentered: true,
+              formatButtonShowsNext: true,
+              formatButtonTextStyle: TextStyle(color: Grey()),
+              titleTextStyle: TextStyle(color: Grey(), fontSize: 20),
             ),
-            canMarkersOverflow: true,
-            defaultTextStyle: TextStyle(color: Grey(), fontSize: 15),
-            todayDecoration: BoxDecoration(
-              color: Color.fromARGB(154, 206, 110, 0),
-              shape: BoxShape.circle,
-            )),
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDay, selectedDay)) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          }
-        },
-        onFormatChanged: (format) {
-          if (_calendarFormat != format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          }
-        },
-        onPageChanged: (focusedDay) {
-          _focusedDay = focusedDay;
-        },
-        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-      ),
+            availableGestures: AvailableGestures.all,
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                color: OrangeColor(),
+                shape: BoxShape.circle,
+              ),
+              canMarkersOverflow: true,
+              defaultTextStyle: TextStyle(color: Grey(), fontSize: 15),
+              todayDecoration: BoxDecoration(
+                color: Color.fromARGB(154, 206, 110, 0),
+                shape: BoxShape.circle,
+              ),
+            ),
+            onDaySelected: (selectDay, focusDay) {
+              if (!isSameDay(selectedDay, selectDay)) {
+                BlocProvider.of<CalendarBloc>(context).add(FocusedDay());
+                // setState(() {
+                selectedDay = selectDay;
+                focusedDay = focusDay;
+                // });
+              }
+            },
+            // onFormatChanged: (format) {
+            //   if (_calendarFormat != format) {
+            //     setState(() {
+            //       _calendarFormat = format;
+            //     });
+            //   }
+            // },
+            onPageChanged: (focusDay) {
+              focusedDay = focusDay;
+            },
+            selectedDayPredicate: (day) => isSameDay(selectedDay, day),
+          ),
+        );
+      },
     );
   }
 
-  Widget expandedTask() {
+  Widget expandedTask(seltDate) {
     return ValueListenableBuilder(
       valueListenable: taskNotifier,
       builder: (BuildContext context, List<Task> taskList, Widget? child) {
@@ -104,11 +112,11 @@ class CalendarScreenState extends State<CalendarScreen> {
             itemCount: taskList.length,
             itemBuilder: (context, index) {
               return DateTime.parse(taskList[index].date.toString()).day ==
-                          _selectedDay?.day &&
+                          seltDate?.day &&
                       DateTime.parse(taskList[index].date.toString()).month ==
-                          _selectedDay?.month &&
+                          seltDate?.month &&
                       DateTime.parse(taskList[index].date.toString()).year ==
-                          _selectedDay?.year
+                          seltDate?.year
                   ? (Padding(
                       padding: const EdgeInsets.only(
                           right: 13.0, left: 13.0, bottom: 10.0),
@@ -193,11 +201,11 @@ class CalendarScreenState extends State<CalendarScreen> {
             itemCount: eventList.length,
             itemBuilder: (context, index) {
               return DateTime.parse(eventList[index].date.toString()).day ==
-                          _selectedDay?.day &&
+                          selectedDay.day &&
                       DateTime.parse(eventList[index].date.toString()).month ==
-                          _selectedDay?.month &&
+                          selectedDay.month &&
                       DateTime.parse(eventList[index].date.toString()).year ==
-                          _selectedDay?.year
+                          selectedDay.year
                   ? (Padding(
                       padding: const EdgeInsets.only(
                           right: 13.0, left: 13.0, bottom: 10.0),
@@ -338,23 +346,33 @@ class CalendarScreenState extends State<CalendarScreen> {
             tabs: myTabs));
   }
 
-  TabBarView TabBarList() {
-    return TabBarView(children: [
-      Column(
-        children: [
-          const szdbx(ht: 20),
-          Expanded(child: expandedTask()),
-        ],
-      ),
-      Column(children: [
-        const szdbx(ht: 20),
-        Expanded(child: expandedEvent()),
-      ]),
-    ]);
+  Widget TabBarList() {
+    return BlocBuilder<CalendarBloc, CalendarState>(
+      builder: (context, state) {
+        return TabBarView(children: [
+          Column(
+            children: [
+              const szdbx(ht: 20),
+              Expanded(child: expandedTask(state.selsectedDay)),
+            ],
+          ),
+          Column(children: [
+            const szdbx(ht: 20),
+            Expanded(child: expandedEvent()),
+          ]),
+        ]);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        BlocProvider.of<CalendarBloc>(context).add(Selected());
+      },
+    );
+    selectedDay = DateTime.now();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
