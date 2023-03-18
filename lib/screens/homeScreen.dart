@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -15,28 +14,28 @@ import 'package:just_do_it/widgets/EventList.dart';
 import 'package:just_do_it/widgets/sizedbox.dart';
 import 'package:just_do_it/widgets/taskList.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
   // Task passValue;
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+//   @override
+//   State<HomeScreen> createState() => _HomeScreenState();
+// }
 
-class _HomeScreenState extends State<HomeScreen> {
+// class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final List<Tab> myTabs = <Tab>[
     const Tab(text: 'Task'),
     const Tab(text: 'Event'),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    // SystemChrome.setEnabledSystemUIOverlays([]);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // SystemChrome.setEnabledSystemUIOverlays([]);
+  // }
 
-  Widget floatBtn() {
+  Widget floatBtn(context) {
     return SpeedDial(
       // animatedIcon: AnimatedIcons.menu_close,
       overlayColor: Black(),
@@ -80,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  AppBar MyAppBar() {
+  AppBar MyAppBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
       bottom: TabBar(
@@ -96,11 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
               letterSpacing: 2, fontSize: 40, fontWeight: FontWeight.bold),
         ),
       ),
-      actions: [appBarAction()],
+      actions: [appBarAction(context)],
     );
   }
 
-  Widget appBarAction() {
+  Widget appBarAction(context) {
     return Row(
       children: [
         IconButton(
@@ -123,10 +122,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Positioned FloatBtnPosition() =>
-      Positioned(bottom: 30, right: 30, child: floatBtn());
+  Positioned FloatBtnPosition(context) =>
+      Positioned(bottom: 30, right: 30, child: floatBtn(context));
 
-  TabBarView TabBarList() {
+  TabBarView TabBarList(BuildContext context) {
     return TabBarView(children: [
       Column(
         children: [
@@ -163,8 +162,8 @@ class _HomeScreenState extends State<HomeScreen> {
             key: _scaffoldKey,
             drawer: NavigationDrawer(),
             backgroundColor: Black(),
-            appBar: MyAppBar(),
-            body: Stack(children: [TabBarList(), FloatBtnPosition()])));
+            appBar: MyAppBar(context),
+            body: Stack(children: [TabBarList(context), FloatBtnPosition(context)])));
     // );
   }
 }
