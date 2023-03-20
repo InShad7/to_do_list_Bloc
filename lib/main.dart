@@ -1,9 +1,15 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:just_do_it/controller/bloc/chip_bloc.dart';
+// import 'package:just_do_it/controller/bloc/task_bloc.dart';
 import 'package:just_do_it/controller/calendar/calendar_bloc.dart';
+import 'package:just_do_it/controller/chip/chip_bloc.dart';
+// import 'package:just_do_it/controller/chips/chip_bloc.dart';
 import 'package:just_do_it/controller/img/img_bloc.dart';
 import 'package:just_do_it/controller/priority/priority_bloc.dart';
+import 'package:just_do_it/controller/search/search_bloc.dart';
+// import 'package:just_do_it/controller/task/task_bloc.dart';
 import 'package:just_do_it/model/data_model.dart';
 
 import 'package:just_do_it/screens/splashScren.dart';
@@ -70,6 +76,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: ((context) => CalendarBloc()),
+        ),
+        BlocProvider(
+          create: ((context) => SearchBloc()),
+        ),
+        BlocProvider(
+          create: ((context) => ChipBloc()),
         ),
       ],
       child: MaterialApp(

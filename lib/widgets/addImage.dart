@@ -13,7 +13,7 @@ XFile? pickedFile;
 class AddImageEvent extends StatelessWidget {
   String img;
 
-   AddImageEvent({super.key,required this.img});
+  AddImageEvent({super.key, required this.img});
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +68,8 @@ class AddImageEvent extends StatelessWidget {
       // setState(() {
       //   imagePath = PickedFile.path;
       // });
+    } else {
+      return;
     }
   }
 }

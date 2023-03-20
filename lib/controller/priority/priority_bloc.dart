@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:just_do_it/screens/addTask.dart';
 import 'package:just_do_it/screens/editTask.dart';
@@ -8,22 +10,16 @@ part 'priority_state.dart';
 
 class PriorityBloc extends Bloc<PriorityEvent, PriorityState> {
   PriorityBloc() : super(PriorityInitial()) {
-
-
     on<AddPriority>((event, emit) {
       return emit(PriorityState(priority: newPriority));
     });
 
-
     on<InitialPriority>((event, emit) {
-      return emit(PriorityState(priority: newPriority=false));
+      return emit(PriorityState(priority: newPriority = false));
     });
-
 
     on<EditPriority>((event, emit) {
       return emit(PriorityState(priority: editPriority!));
     });
-
-
   }
 }

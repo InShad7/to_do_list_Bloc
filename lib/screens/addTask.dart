@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_do_it/controller/priority/priority_bloc.dart';
-import 'package:just_do_it/screens/addEvent.dart';
 import 'package:just_do_it/utilities/Colors.dart';
 import 'package:just_do_it/utilities/textfieldForm.dart';
 import 'package:just_do_it/widgets/appbar.dart';

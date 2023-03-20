@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:just_do_it/controller/search/search_bloc.dart';
 import 'package:just_do_it/function/db_function.dart';
 import 'package:just_do_it/model/data_model.dart';
 import 'package:just_do_it/screens/addEvent.dart';
@@ -22,7 +24,6 @@ class myAppBar extends StatelessWidget {
         IconButton(
             onPressed: () {
               TaskAddBtn();
-              // BlocProvider.of<DateBloc>(context).add(clear());
               Navigator.of(context).pop();
             },
             icon: const Icon(
