@@ -76,10 +76,7 @@ class FilterChips extends StatelessWidget {
                   if (val) {
                     filter = 'date';
 
-                    newDatePick = (await pickDateRange(context) == null
-                        ? DateTimeRange(
-                            start: DateTime.now(), end: DateTime.now())
-                        : dateRange);
+                    newDatePick = (await pickDateRange(context))!;
                     //  pickDateRange(context);
                     BlocProvider.of<SearchBloc>(context).add(IsSelected());
                     BlocProvider.of<SearchBloc>(context)
